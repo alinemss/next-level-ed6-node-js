@@ -1,20 +1,26 @@
 import { getCustomRepository } from "typeorm";
 import { UserRepositories } from "../respositories/UsersRepositorie"
+import {hash} from "bcryptjs"
+
 
 interface IUserRequest {
   name: string;
   email: string;
-  admin?: boolean
+  admin?: boolean;
+  password: string;
 }
 
 class CreateUsersService{
 
-  async execute({name,email,admin}:IUserRequest) {
+  //Forma de inserir default no admin
+  async execute({name,email,admin = false,password}:IUserRequest) {
     const userRepository = getCustomRepository(UserRepositories);
 
     if(!email){
       throw new Error("Email Inválido")
     }
+    
+    const passwordHash = await hash(password, 8);
     
     const userAlreadyExists = await userRepository.findOne({
       email,
@@ -28,6 +34,8 @@ class CreateUsersService{
       name,
       email,
       admin,
+      //passar o password criptografado
+      password: passwordHash,
     });
 
     //para salvar

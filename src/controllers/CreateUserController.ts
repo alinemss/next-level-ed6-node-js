@@ -6,13 +6,13 @@ class CreateUserController{
 async handle(request:Request, response:Response){
   
   //pega os dados da requisição
-  const {name,email,admin} = request.body;
+  const {name,email,admin,password} = request.body;
 
   //cria o novo user a partir do service
   const createUserService = new CreateUsersService();
 
   //leva o user para o repositorio usando o metodo execute presetne no service
-  const user = await createUserService.execute({name,email,admin});
+  const user = await createUserService.execute({name,email,admin,password});
 
   //retorna o proprio user em formato json
   return response.json(user);
