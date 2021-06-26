@@ -17,7 +17,8 @@ class CreateUsersService{
     const userRepository = getCustomRepository(UserRepositories);
 
     if(!email){
-      throw new Error("Email Inválido")
+      const err = new Error("Email Inválido");
+      throw err.message
     }
     
     const passwordHash = await hash(password, 8);
@@ -27,7 +28,8 @@ class CreateUsersService{
     });
 
     if (userAlreadyExists){
-      throw new Error("Usuário já existe")
+      const err = new Error("Usuário já existe")
+      throw err.message
     }
     //para salvar é necessário criar uma instancia
     const user = userRepository.create({
